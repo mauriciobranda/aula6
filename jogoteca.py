@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, session, flash, url
 from flask_mysqldb import MySQL
 from models import Jogo, Usuario
 
-from dao import JogoDao
+from dao import JogoDao, UsuarioDao
 
 app = Flask(__name__)
 app.secret_key = 'alura'
@@ -15,24 +15,16 @@ app.config['MYSQL_PORT'] = 3306
 
 db = MySQL(app)
 
+#criar um objeto
 jogo_dao = JogoDao(db)
-
-usuario1 = Usuario('luan', 'Luan Marques', '1234')
-usuario2 = Usuario('Nico', 'Nico Steppat', '7a1')
-usuario3 = Usuario('flavio', 'flavio Almeida', 'javascript')
-
-usuarios = {usuario1.id: usuario1,
-            usuario2.id: usuario2,
-            usuario3.id: usuario3}
-
-
-jogo1 = Jogo('Super Mario', 'Ação', 'SNES')
-jogo2 = Jogo('Pokemon Gold', 'RPG', 'GBA')
-lista = [jogo1, jogo2]
+usuario_dao = UsuarioDao(db)
 
 @app.route('/')
 def index():
-    return render_template('lista.html', titulo='Jogos', jogos=lista)
+    lista = jogo_dao.listar()
+    qtd_reg = len(lista)
+    print("qtd de registros: " + str(qtd_reg))
+    return render_template('lista.html', titulo='Jogos', jogos=lista, qtd=qtd_reg)
 
 @app.route('/novo')
 def novo():
@@ -58,8 +50,8 @@ def login():
 
 @app.route('/autenticar', methods=['POST', ])
 def autenticar():
-    if request.form['usuario'] in usuarios:
-        usuario = usuarios[request.form['usuario']]
+    usuario = usuario_dao.buscar_por_id(request.form['usuario'])
+    if usuario: #verifico se existe
         if usuario.senha == request.form['senha']:
             session['usuario_logado'] = usuario.id
             flash(usuario.nome + ' logou com sucesso!')
@@ -67,7 +59,7 @@ def autenticar():
             return redirect(proxima_pagina)
     else:
         flash('Não logado, tente novamente!')
-        return redirect(url_for('login'))
+        return render_template('login.html')
 
 
 @app.route('/logout')

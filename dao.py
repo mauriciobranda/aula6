@@ -16,6 +16,7 @@ class JogoDao:
         cursor = self.__db.connection.cursor()
         print(cursor)
         if (jogo.id):
+            print("caiu aqui pq existe")
             cursor.execute(SQL_ATUALIZA_JOGO, (jogo.nome, jogo.categoria, jogo.console, jogo.id))
             #print(cursor.execute(SQL_ATUALIZA_JOGO, (jogo.nome, jogo.categoria, jogo.console, jogo.id)))
         else:

@@ -59,6 +59,14 @@ def atualizar():
     jogo_dao.salvar(jogo)
     return redirect(url_for('index'))
 
+#deletar
+@app.route('/deletar/<int:id>') #passando como parametro o id
+def deletar(id): #recupero do banco este id
+    jogo_dao.deletar(id)
+    flash("O jogo foi removido!")
+    return redirect(url_for('index'))
+
+
 @app.route('/login')
 def login():
     proxima = request.args.get('proxima')

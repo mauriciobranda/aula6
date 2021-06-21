@@ -16,16 +16,14 @@ class JogoDao:
         cursor = self.__db.connection.cursor()
         print(cursor)
         if (jogo.id):
-            print("caiu aqui pq existe")
+            print("caiu aqui pq")
             cursor.execute(SQL_ATUALIZA_JOGO, (jogo.nome, jogo.categoria, jogo.console, jogo.id))
             #print(cursor.execute(SQL_ATUALIZA_JOGO, (jogo.nome, jogo.categoria, jogo.console, jogo.id)))
         else:
             cursor.execute(SQL_CRIA_JOGO, (jogo.nome, jogo.categoria, jogo.console))
             jogo.id = cursor.lastrowid
-            print(jogo.nome)
-            print(jogo.categoria)
-            print(jogo.console)
-            print(jogo.id)
+
+            print(SQL_CRIA_JOGO)
         self.__db.connection.commit()
         return jogo
 
@@ -42,6 +40,8 @@ class JogoDao:
         return Jogo(tupla[1], tupla[2], tupla[3], id=tupla[0])
 
     def deletar(self, id):
+        print("veioooo deletar")
+        print(SQL_DELETA_JOGO)
         self.__db.connection.cursor().execute(SQL_DELETA_JOGO, (id, ))
         self.__db.connection.commit()
 

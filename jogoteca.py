@@ -39,6 +39,11 @@ def criar():
     console = request. form['console']
     jogo = Jogo(nome, categoria, console)
     jogo_dao.salvar(jogo)
+    
+#salvar o arquivo
+    arquivo = request.files['arquivo']
+    arquivo.save(f'uploads/{arquivo.filename}') #define o local
+    flash(nome + ' jogo salvo com sucesso!')
     return redirect(url_for('index'))
 
 #Editar
